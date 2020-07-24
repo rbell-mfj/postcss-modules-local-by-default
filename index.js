@@ -44,6 +44,9 @@ function localizeNode(rule, mode, localAliasMap) {
   const isScopePseudo = node =>
     node.value === ':local' || node.value === ':global';
 
+  const isModulePseudo = node =>
+    node.value === ':import' || node.value === ':export';
+
   const transform = (node, context) => {
     if (context.ignoreNextSpacing && !isSpacing(node)) {
       throw new Error('Missing whitespace after ' + context.ignoreNextSpacing);
@@ -115,6 +118,12 @@ function localizeNode(rule, mode, localAliasMap) {
         let childContext;
         const isNested = !!node.length;
         const isScoped = isScopePseudo(node);
+
+        if (isModulePseudo(node)) {
+          // :import and :export are inherently local
+          context.hasLocals = true;
+          break;
+        }
 
         // :local(.foo)
         if (isNested) {

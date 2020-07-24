@@ -328,6 +328,18 @@ const tests = [
     expected: ':import("~/lol.css") { foo: __foo; }',
   },
   {
+    should: 'ignore :export statements in pure mode',
+    options: { mode: 'pure' },
+    input: ':export { foo: __foo; }',
+    expected: ':export { foo: __foo; }',
+  },
+  {
+    should: 'ignore :import statements in pure mode',
+    input: ':import("~/lol.css") { foo: __foo; }',
+    options: { mode: 'pure' },
+    expected: ':import("~/lol.css") { foo: __foo; }',
+  },
+  {
     should: 'incorrectly handle nested selectors',
     input: '.bar:not(:global .foo, .baz) {}',
     expected: ':local(.bar):not(.foo, .baz) {}',
